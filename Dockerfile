@@ -39,13 +39,7 @@ COPY --from=builder /root/.local /root/.local
 COPY ./lightrag ./lightrag
 COPY setup.py .
 
-# Copy Railway-specific files
-COPY start.py .
-COPY .env.railway .
-COPY .env .
-
-# Install python-dotenv for environment loading
-RUN pip install ".[api]" python-dotenv
+RUN pip install ".[api]"
 # Make sure scripts in .local are usable
 ENV PATH=/root/.local/bin:$PATH
 
@@ -59,5 +53,5 @@ ENV INPUT_DIR=/app/data/inputs
 # Expose the default port
 EXPOSE 9621
 
-# Set entrypoint to use our custom start.py
-ENTRYPOINT ["python", "start.py"]
+# Set entrypoint
+ENTRYPOINT ["python", "-m", "lightrag.api.lightrag_server"]
