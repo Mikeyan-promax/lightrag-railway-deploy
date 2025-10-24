@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y \
 COPY pyproject.toml .
 COPY setup.py .
 COPY lightrag/ ./lightrag/
+COPY .env.railway .env.railway
+COPY env.example .env
 
 # Install dependencies
 ENV PATH="/root/.cargo/bin:${PATH}"
@@ -36,11 +38,11 @@ WORKDIR /app
 
 # Copy only necessary files from builder
 COPY --from=builder /root/.local /root/.local
+COPY --from=builder /app/.env.railway .env.railway
+COPY --from=builder /app/env.example .env
 COPY ./lightrag ./lightrag
 COPY setup.py .
 COPY start.py .
-COPY .env.railway .env.railway
-COPY env.example .env
 
 # Install python-dotenv for environment variable loading
 RUN pip install ".[api]" python-dotenv
